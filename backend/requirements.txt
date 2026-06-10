@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase
+python-dotenv
+pydantic
+python-multipart
+faster-whisper
+langgraph
+langchain
+langchain-groq
+opensmile
