@@ -10,14 +10,14 @@ app = FastAPI(title="VoiceGuard AI API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 supabase_service = SupabaseService()
-whisper_service = WhisperService(model_size="base")
+whisper_service = WhisperService(model_size="tiny")
 
 # Ensure temp directory exists for audio uploads
 os.makedirs("/tmp/voiceguard", exist_ok=True)

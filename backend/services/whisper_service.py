@@ -16,7 +16,7 @@ class WhisperService:
 
     def transcribe(self, audio_path: str) -> str:
         self._load_model()
-        segments, info = self.model.transcribe(audio_path, beam_size=5)
+        segments, info = self.model.transcribe(audio_path, beam_size=1)
         
         transcript = []
         for segment in segments:

@@ -1,4 +1,5 @@
-import { UserButton, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -50,7 +51,7 @@ export default async function DoctorDashboard() {
         </nav>
         <div className="p-6 border-t border-slate-800">
           <div className="flex items-center space-x-3">
-             <UserButton afterSignOutUrl="/" />
+             <UserButton />
              <span className="text-sm font-medium">Dr. {user?.lastName || "Clinician"}</span>
           </div>
         </div>

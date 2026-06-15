@@ -1,0 +1,16 @@
+INFO:     Will watch for changes in these directories: ['/Users/aman/Projects/voiceguard-ai/backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [16719] using StatReload
+INFO:     Started server process [16727]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:53630 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53860 - "POST /api/v1/reports/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53860 - "GET /api/v1/reports/VG-FB7F6061 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53860 - "GET /api/v1/reports/VG-FB7F6061 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55960 - "POST /api/v1/reports/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55960 - "GET /api/v1/reports/VG-F578F749 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55960 - "GET /api/v1/reports/VG-F578F749 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56126 - "POST /api/v1/reports/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56126 - "GET /api/v1/reports/VG-1669B808 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56126 - "GET /api/v1/reports/VG-1669B808 HTTP/1.1" 200 OK

@@ -1,4 +1,5 @@
-import { UserButton, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import VoiceRecorder from "@/components/VoiceRecorder";
@@ -24,7 +25,7 @@ export default async function PatientDashboard() {
             VoiceGuard <span className="text-teal-600">AI</span>
           </span>
         </div>
-        <UserButton afterSignOutUrl="/" />
+        <UserButton />
       </header>
 
       {/* Main Content */}

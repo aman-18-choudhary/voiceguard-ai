@@ -32,9 +32,15 @@ export default function VoiceRecorder() {
     }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     };
   }, [status]);
+
+  // Cleanup polling interval on unmount
+  useEffect(() => {
+    return () => {
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    };
+  }, []);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -87,7 +93,8 @@ export default function VoiceRecorder() {
 
   const pollStatus = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/reports/${id}`);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      const res = await fetch(`${apiUrl}/api/v1/reports/${id}`);
       if (res.ok) {
         const data = await res.json();
         
@@ -117,7 +124,8 @@ export default function VoiceRecorder() {
       formData.append("audio", audioBlob, "recording.webm");
       formData.append("user_id", userId || "anonymous");
 
-      const response = await fetch("http://localhost:8000/api/v1/reports/upload", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      const response = await fetch(`${apiUrl}/api/v1/reports/upload`, {
         method: "POST",
         body: formData,
       });

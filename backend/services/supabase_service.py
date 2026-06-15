@@ -6,7 +6,7 @@ from core.config import settings
 def get_supabase_client() -> Client:
     # Use empty string fallback to prevent crash if not configured yet
     url = settings.SUPABASE_URL or ""
-    key = settings.SUPABASE_KEY or ""
+    key = settings.SUPABASE_SERVICE_ROLE_KEY or ""
     
     if url == "placeholder" or not url:
         # Prevent crash during local dev before keys are added
