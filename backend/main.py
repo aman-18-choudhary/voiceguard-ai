@@ -6,7 +6,51 @@ import uuid
 import os
 import shutil
 
-app = FastAPI(title="VoiceGuard AI API", version="1.0.0")
+from contextlib import asynccontextmanager
+import sys
+from core.config import settings
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Validate environment variables
+    if not settings.SUPABASE_URL or settings.SUPABASE_URL == "placeholder":
+        print("Missing environment variable:\nSUPABASE_URL", file=sys.stderr)
+        sys.exit(1)
+        
+    if not settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_SERVICE_ROLE_KEY == "placeholder":
+        print("Missing environment variable:\nSUPABASE_SERVICE_ROLE_KEY", file=sys.stderr)
+        sys.exit(1)
+        
+    if not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "placeholder":
+        print("Missing environment variable:\nGROQ_API_KEY", file=sys.stderr)
+        sys.exit(1)
+        
+    print("✓ Environment Ready: .env loaded")
+    
+    # Initialize/verify clients
+    from services.supabase_service import supabase_service
+    if supabase_service.client:
+        print("✓ Database Ready: Supabase connected")
+    else:
+        print("✗ Database Error: Supabase client failed to initialize", file=sys.stderr)
+        sys.exit(1)
+        
+    from langchain_groq import ChatGroq
+    try:
+        # A quick initialization to ensure the key is accepted by the library
+        test_llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant", groq_api_key=settings.GROQ_API_KEY)
+        print("✓ Groq Ready: ChatGroq client connected")
+    except Exception as e:
+        print(f"✗ Groq Error: {e}", file=sys.stderr)
+        sys.exit(1)
+        
+    from services.ai.langgraph_service import langgraph_service
+    if langgraph_service.pipeline:
+        print("✓ LangGraph Ready: Pipeline compiled and initialized")
+        
+    yield
+
+app = FastAPI(title="VoiceGuard AI API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -87,4 +131,41 @@ async def get_report(report_id: str):
         "report": report,
         "status": report.get("status"),
         "transcript": report.get("transcript")
+    }
+
+def process_ai_pipeline(report_id: str, transcript: str):
+    from services.ai.langgraph_service import langgraph_service
+    try:
+        supabase_service.update_report_status(report_id, "ANALYZING")
+        state = langgraph_service.analyze_report(report_id, transcript)
+        supabase_service.save_analysis(report_id, state.model_dump())
+        supabase_service.update_report_status(report_id, "COMPLETED")
+    except Exception as e:
+        print(f"Error in AI pipeline: {e}")
+        supabase_service.update_report_status(report_id, "ANALYSIS_FAILED")
+
+@app.post("/api/v1/analyze/{report_id}")
+async def analyze_report(report_id: str, background_tasks: BackgroundTasks):
+    report = supabase_service.get_report(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+        
+    transcript = report.get("transcript")
+    if not transcript:
+        raise HTTPException(status_code=400, detail="Transcript not ready")
+        
+    background_tasks.add_task(process_ai_pipeline, report_id, transcript)
+    return {"status": "ANALYZING", "message": "AI analysis started"}
+
+@app.get("/api/v1/analysis/{report_id}")
+async def get_analysis(report_id: str):
+    report = supabase_service.get_report(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+        
+    analysis = supabase_service.get_analysis(report_id)
+    
+    return {
+        "report": report,
+        "analysis": analysis
     }

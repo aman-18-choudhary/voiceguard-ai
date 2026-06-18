@@ -72,3 +72,28 @@ class SupabaseService:
         if res.data:
             return res.data[0]
         return None
+
+    def save_analysis(self, report_id: str, analysis_data: dict):
+        if not self.client:
+            return
+            
+        data = {
+            "report_id": report_id,
+            "drugs": analysis_data.get("drugs", []),
+            "symptoms": analysis_data.get("symptoms", []),
+            "timeline": analysis_data.get("timeline", []),
+            "summary": analysis_data.get("summary", ""),
+            "confidence": analysis_data.get("confidence", 0)
+        }
+        
+        # Upsert just in case it's run multiple times
+        self.client.table("ai_analysis").upsert(data).execute()
+
+    def get_analysis(self, report_id: str):
+        if not self.client:
+            return None
+            
+        res = self.client.table("ai_analysis").select("*").eq("report_id", report_id).execute()
+        if res.data:
+            return res.data[0]
+        return None
