@@ -9,3 +9,9 @@ langgraph
 langchain
 langchain-groq
 opensmile
+librosa
+numpy
+pandas
+xgboost
+shap
+reportlab

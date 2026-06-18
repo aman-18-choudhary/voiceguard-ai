@@ -10,7 +10,7 @@ type ProcessingStatus = "idle" | "recording" | "review" | "UPLOADING" | "TRANSCR
 
 export default function VoiceRecorder() {
   const router = useRouter();
-  const { userId } = useAuth();
+  const { userId, getToken } = useAuth();
   
   const [status, setStatus] = useState<ProcessingStatus>("idle");
   const [time, setTime] = useState(0);
@@ -93,8 +93,11 @@ export default function VoiceRecorder() {
 
   const pollStatus = async (id: string) => {
     try {
+      const token = await getToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-      const res = await fetch(`${apiUrl}/api/v1/reports/${id}`);
+      const res = await fetch(`${apiUrl}/api/v1/reports/${id}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (res.ok) {
         const data = await res.json();
         
@@ -103,9 +106,13 @@ export default function VoiceRecorder() {
         } else if (data.status === "TRANSCRIBED") {
            setStatus("TRANSCRIBED");
            if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-           // Redirect to results
+           // Redirect to review page for human-in-the-loop
+           router.push(`/dashboard/review/${id}`);
+        } else if (data.status === "ANALYZING" || data.status === "COMPLETED") {
+           setStatus("TRANSCRIBED");
+           if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
            router.push(`/dashboard/report/${id}`);
-        } else if (data.status === "FAILED") {
+        } else if (data.status === "FAILED" || data.status === "ANALYSIS_FAILED") {
            setStatus("FAILED");
            if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
         }
@@ -122,11 +129,14 @@ export default function VoiceRecorder() {
     try {
       const formData = new FormData();
       formData.append("audio", audioBlob, "recording.webm");
-      formData.append("user_id", userId || "anonymous");
 
+      const token = await getToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
       const response = await fetch(`${apiUrl}/api/v1/reports/upload`, {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
         body: formData,
       });
 

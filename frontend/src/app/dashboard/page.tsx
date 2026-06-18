@@ -1,17 +1,29 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser, auth } from "@clerk/nextjs/server";
 import { UserButton } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import VoiceRecorder from "@/components/VoiceRecorder";
+import Link from "next/link";
 
 export default async function PatientDashboard() {
   const user = await currentUser();
-
-  // Mock data for recent reports
-  const recentReports = [
-    { id: "VG-9021", date: "Oct 24, 2023", status: "Completed", severity: "Moderate" },
-    { id: "VG-8812", date: "Sep 12, 2023", status: "Processing", severity: "Pending" },
-  ];
+  const { getToken } = await auth();
+  const token = await getToken();
+  
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  
+  let recentReports = [];
+  try {
+    const res = await fetch(`${apiUrl}/api/v1/reports/history`, {
+      headers: { "Authorization": `Bearer ${token}` },
+      cache: "no-store"
+    });
+    if (res.ok) {
+      recentReports = await res.json();
+    }
+  } catch (e) {
+    console.error("Failed to fetch reports:", e);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -54,32 +66,34 @@ export default async function PatientDashboard() {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold tracking-tight">Recent Reports</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {recentReports.map((report) => (
-              <Card key={report.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">Report #{report.id}</CardTitle>
-                    {report.status === "Completed" ? (
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                        {report.status}
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="animate-pulse">
-                        {report.status}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardDescription>{report.date}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-2 text-sm">
-                    <span className="text-muted-foreground">Severity:</span>
-                    <span className={`font-medium ${report.severity === "Moderate" ? "text-amber-600" : "text-slate-600"}`}>
-                      {report.severity}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
+            {recentReports.map((report: any) => (
+              <Link href={`/dashboard/report/${report.id}`} key={report.id}>
+                <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">Report #{report.id.substring(0,8)}</CardTitle>
+                      {report.status === "COMPLETED" ? (
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          Completed
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="animate-pulse">
+                          {report.status}
+                        </Badge>
+                      )}
+                    </div>
+                    <CardDescription>{new Date(report.created_at).toLocaleDateString()}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <span className="text-muted-foreground">Severity:</span>
+                      <span className={`font-medium ${report.severity === "MODERATE" ? "text-amber-600" : report.severity === "HIGH" || report.severity === "CRITICAL" ? "text-red-600" : "text-slate-600"}`}>
+                        {report.severity}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

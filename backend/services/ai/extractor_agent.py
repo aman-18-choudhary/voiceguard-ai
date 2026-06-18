@@ -16,7 +16,12 @@ def extractor_node(state: AnalysisState) -> AnalysisState:
     prompt = PromptTemplate.from_template(
         "You are an expert clinical AI assistant. Extract the drugs and symptoms mentioned in the patient's transcript.\n\n"
         "Transcript: {transcript}\n\n"
-        "Extract the drugs and symptoms. If none are mentioned, return empty lists."
+        "Guidelines:\n"
+        "1. Extract actual symptoms (e.g., rash, fever, cough, nausea, pain, swelling).\n"
+        "2. Avoid extracting body parts as symptoms. Distinguish the symptom from the body location.\n"
+        "3. Provide the body location in the 'location' field if mentioned.\n"
+        "4. Extract the exact name of the drug.\n"
+        "5. If none are mentioned, return empty lists."
     )
     
     chain = prompt | structured_llm
