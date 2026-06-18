@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="./docs/images/logo.png" alt="VoiceGuard AI Logo" width="150" height="150" />
   <h1>VoiceGuard AI 🎙️💊</h1>
   <p><em>“Voice-Based Pharmacovigilance Powered by Explainable AI”</em></p>
   
@@ -11,8 +10,6 @@
     <img src="https://img.shields.io/badge/LangGraph-🦜🕸️-green.svg" alt="LangGraph" />
     <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
     <img src="https://img.shields.io/badge/Clerk-Authentication-6C47FF.svg" alt="Clerk" />
-    <img src="https://img.shields.io/badge/Vercel-Deployed-black.svg" alt="Vercel" />
-    <img src="https://img.shields.io/badge/Render-Deployed-46E3B7.svg" alt="Render" />
     <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" />
   </p>
 </div>
@@ -53,28 +50,22 @@
 ## 📸 4. Demo Screenshots
 
 ### Landing Page
-![Landing Page](./docs/images/landing.png)
+![Landing Page](./docs/images/z5.jpg)
 
 ### Dashboard
-![Dashboard](./docs/images/dashboard.png)
-
-### Transcript Review
-![Transcript Review](./docs/images/transcript_review.png)
+![Dashboard](./docs/images/z4.jpg)
 
 ### Report Analysis
-![Report Analysis](./docs/images/report1.png)
+![Report Analysis](./docs/images/z1.jpg)
 
 ### Explainability Engine
-![Explainability Engine](./docs/images/report2.png)
-
-### Doctor Portal
-![Doctor Portal](./docs/images/doctor_portal.png)
+![Explainability Engine](./docs/images/z2.jpg)
 
 ### Research Dashboard
-![Research Dashboard](./docs/images/research_dashboard.png)
+![Research Dashboard](./docs/images/z3.jpg)
 
 ### PDF Export
-![PDF Export](./docs/images/pdf_export.png)
+![PDF Export](./docs/images/report.jpg)
 
 ---
 
@@ -248,29 +239,9 @@ CLERK_PEM_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
 
 ---
 
-## 🚀 13. Deployment
+## 🌟 13. Novelty
 
-### Frontend (Vercel)
-1. Push your code to GitHub.
-2. Import the `frontend` directory as a new project in Vercel.
-3. Add Environment Variables.
-4. Deploy!
-
-### Backend (Render)
-1. Create a new Web Service on Render.
-2. Connect the GitHub repository.
-3. Set Root Directory to `backend/`.
-4. Build Command: `pip install -r requirements.txt`
-5. Start Command: `uvicorn main:app --host 0.0.0.0 --port 10000`
-
-### Database (Supabase)
-Run the SQL migration scripts located in `backend/database/migrations/` in your Supabase SQL Editor.
-
----
-
-## 🌟 14. Patent Novelty
-
-VoiceGuard AI introduces several highly novel, patentable approaches to pharmacovigilance:
+VoiceGuard AI introduces several highly novelty to pharmacovigilance:
 *   **Voice-Based ADR Reporting:** Replacing complex forms with frictionless natural language audio.
 *   **Stress-Aware Severity Assessment:** Fusing NLP with acoustic biomarker analysis to objectively measure patient distress.
 *   **Explainable Pharmacovigilance:** Generating transparent, human-readable rationales for AI-derived medical conclusions.
@@ -278,7 +249,7 @@ VoiceGuard AI introduces several highly novel, patentable approaches to pharmaco
 
 ---
 
-## 🔬 15. Research Contribution
+## 🔬 14. Research Contribution
 
 This project advances the field of healthcare informatics by demonstrating:
 *   **Temporal Causality Reconstruction:** Successfully extracting chronological links between unstructured drug ingestion and symptom onset statements.
@@ -287,7 +258,7 @@ This project advances the field of healthcare informatics by demonstrating:
 
 ---
 
-## 📈 16. Results
+## 📈 15. Results
 
 *   **Extraction Accuracy:** `[95%+]` Entity Recognition Success Rate
 *   **Processing Latency:** `< 5 seconds` End-to-End Pipeline Execution
@@ -296,7 +267,7 @@ This project advances the field of healthcare informatics by demonstrating:
 
 ---
 
-## 🛣️ 17. Future Roadmap
+## 🛣️ 16. Future Roadmap
 
 *   [ ] **Mobile Application:** Native iOS/Android apps for on-the-go reporting.
 *   [ ] **EHR Integration:** HL7/FHIR compatibility for seamless hospital electronic health record syncing.
@@ -306,10 +277,10 @@ This project advances the field of healthcare informatics by demonstrating:
 
 ---
 
-## 👨‍💻 18. Authors
+## 👨‍💻 17. Authors
 
-**Ojasvi Pathania**  
-B.Tech CSE (Bioinformatics)  
+**Aman**  
+B.Tech CSE 
 VIT Vellore  
 GitHub: [https://github.com/aman-18-choudhary/voiceguard-ai](https://github.com/aman-18-choudhary/voiceguard-ai)
 
